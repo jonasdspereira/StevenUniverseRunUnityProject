@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
 	public float slideTemp;
 	public float timeTemp;
 
+    //Colisor
+    public Transform colisor;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,10 +36,15 @@ public class PlayerController : MonoBehaviour
 
 	if(Input.GetButtonDown("Jump") && grounded == true) {
 		playerRigidBody.AddForce(new Vector2(0, forceJump));
-		slide = false;
-	}
+        if(slide == true)
+        {
+                colisor.position = new Vector3(colisor.position.x, colisor.position.y + 0.5f, colisor.position.z);
+                slide = false;
+        }
+    }
 
 	if(Input.GetButtonDown("Slide") && grounded == true){
+        colisor.position = new Vector3(colisor.position.x, colisor.position.y - 0.5f, colisor.position.z);
 		slide = true;
 		timeTemp = 0;
 	}
@@ -46,11 +54,18 @@ public class PlayerController : MonoBehaviour
 	if(slide == true) {
 		timeTemp += Time.deltaTime;
 		if (timeTemp >= slideTemp){
-				slide = false;
+                colisor.position = new Vector3(colisor.position.x, colisor.position.y + 0.5f, colisor.position.z);
+                slide = false;
 			}
 	}
 
 	Anime.SetBool("jump", !grounded);
 	Anime.SetBool("slide",slide);
     }
+
+    private void OnTriggerEnter2D()
+    {
+        Debug.Log("Bateu"); 
+    }
+
 }
